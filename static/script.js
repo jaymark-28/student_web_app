@@ -1,40 +1,53 @@
 const form = document.getElementById("studentForm");
 const list = document.getElementById("studentList");
 
+const nameInput = document.getElementById("name");
+const dateInput = document.getElementById("date");
+const subjectInput = document.getElementById("subject");
+const emailInput = document.getElementById("email");
+const gradeInput = document.getElementById("grade");
+
+const dateField = document.getElementById("dateField");
+const subjectField = document.getElementById("subjectField");
+const emailField = document.getElementById("emailField");
+const gradeField = document.getElementById("gradeField");
+const submitBtn = document.getElementById("submitBtn");
+
 let students = JSON.parse(localStorage.getItem("students")) || [];
 
-function validateForm(name, grade) {
-  if (name === "" || isNaN(grade)) {
-    alert("Please fill in all fields.");
-    return false;
-  }
+/* FIELD REVEAL LOGIC */
+nameInput.addEventListener("input", () => {
+  dateField.classList.toggle("hidden", nameInput.value.trim() === "");
+});
 
-  if (grade < 0 || grade > 100) {
-    alert("Grade must be between 0 and 100.");
-    return false;
-  }
+dateInput.addEventListener("change", () => {
+  subjectField.classList.toggle("hidden", dateInput.value === "");
+});
 
-  return true;
-}
+subjectInput.addEventListener("change", () => {
+  emailField.classList.toggle("hidden", subjectInput.value === "");
+});
 
+emailInput.addEventListener("input", () => {
+  gradeField.classList.toggle("hidden", !emailInput.checkValidity());
+});
+
+gradeInput.addEventListener("input", () => {
+  submitBtn.classList.toggle(
+    "hidden",
+    gradeInput.value === "" || gradeInput.value < 0 || gradeInput.value > 100
+  );
+});
+
+/* RENDER STUDENTS */
 function render() {
   list.innerHTML = "";
 
   students.forEach(s => {
     const li = document.createElement("li");
-
-    let status, cssClass;
-    if (s.grade >= 75) {
-      status = "Passed";
-      cssClass = "pass";
-    } else {
-      status = "Failed";
-      cssClass = "fail";
-    }
-
-    li.className = cssClass;
-    li.textContent = `${s.name} - ${s.grade} (${status})`;
-
+    const status = s.grade >= 75 ? "Passed" : "Failed";
+    li.className = s.grade >= 75 ? "pass" : "fail";
+    li.textContent = `${s.name} - ${s.subject} - ${s.grade} (${status})`;
     list.appendChild(li);
   });
 }
@@ -42,17 +55,24 @@ function render() {
 form.addEventListener("submit", e => {
   e.preventDefault();
 
-  const name = document.getElementById("name").value.trim();
-  const grade = Number(document.getElementById("grade").value);
+  students.push({
+    name: nameInput.value,
+    date: dateInput.value,
+    subject: subjectInput.value,
+    email: emailInput.value,
+    grade: Number(gradeInput.value)
+  });
 
-  if (!validateForm(name, grade)) return;
-
-  students.push({ name, grade });
   localStorage.setItem("students", JSON.stringify(students));
-
   render();
   form.reset();
+
+  // Reset visibility
+  dateField.classList.add("hidden");
+  subjectField.classList.add("hidden");
+  emailField.classList.add("hidden");
+  gradeField.classList.add("hidden");
+  submitBtn.classList.add("hidden");
 });
 
 render();
-
