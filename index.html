@@ -9,27 +9,45 @@
 <body>
 
 <div class="container">
-
   <h2>Student Grade Management</h2>
 
   <form id="studentForm">
+
     <label>Student Name:</label>
     <input type="text" id="name">
 
-    <label>Grade:</label>
-    <input type="number" id="grade">
+    <div id="dateField" class="hidden">
+      <label>Date:</label>
+      <input type="date" id="date">
+    </div>
 
-    <button type="submit">Add Student</button>
+    <div id="subjectField" class="hidden">
+      <label>Subject:</label>
+      <select id="subject">
+        <option value="">-- Select Subject --</option>
+        <option>Integrated Programming</option>
+        <option>Web Fundamentals</option>
+      </select>
+    </div>
+
+    <div id="emailField" class="hidden">
+      <label>Email:</label>
+      <input type="email" id="email">
+    </div>
+
+    <div id="gradeField" class="hidden">
+      <label>Grade:</label>
+      <input type="number" id="grade">
+    </div>
+
+    <button type="submit" id="submitBtn" class="hidden">Add Student</button>
   </form>
 
   <hr>
 
-  
   <h3>Student List</h3>
   <ul id="studentList"></ul>
-
 </div>
 
 </body>
 </html>
-
